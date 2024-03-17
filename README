@@ -1,0 +1,9 @@
+-- elastic-cluster:
+
+1) Give permissions for volumes
+sudo chown 1000:1000 data01_7_17_4/
+
+
+2) Set vm.max_map_count
+sudo sysctl -w vm.max_map_count=262144
+
