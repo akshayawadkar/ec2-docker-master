@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.1
+    ports:
+      - 9091:8080
+    hostname: keycloak
+    restart: always
+    environment:
+      - "KEYCLOAK_ADMIN=admin"
+      - "KEYCLOAK_ADMIN_PASSWORD=admin"
+      - "KC_DB=postgres"
+      - "KC_DB_URL=jdbc:postgresql://postgres/keycloak"
+      - "KC_DB_URL_PORT=5433"
+      - "KC_DB_USERNAME=keycloak"
+      - "KC_DB_PASSWORD=keycloak"
+      - "PROXY_ADDRESS_FORWARDING=true"
+    command: "start-dev"
+    depends_on:
+      - postgres-keycloak
+    networks:
+      - ${GLOBAL_NETWORK:-keycloak}
+
+  postgres-keycloak:
+    image: postgres:15.1
+    restart: always
+    environment:
+      - "POSTGRES_USER=keycloak"
+      - "POSTGRES_PASSWORD=keycloak"
+      - "POSTGRES_DB=keycloak"
+    user: root
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./volumes/postgres-keycloak/data:/var/lib/postgresql/data
+      - ./volumes/postgres-keycloak/config:/etc/postgresql
+    networks:
+      - ${GLOBAL_NETWORK:-postgres}
+
+  postgres-keycloak-setup:
+    image: postgres:15.1
+    user: root
+    volumes:
+      - ./volumes/postgres-keycloak/data:/var/lib/postgresql/data
+      - ./volumes/postgres-keycloak/config:/etc/postgresql
+    entrypoint: [ "bash", "-c", "chmod 750 -R /var/lib/postgresql/data && chmod 750 -R /etc/postgresql" ]
+    depends_on:
+      - postgres-keycloak
+    networks:
+      - ${GLOBAL_NETWORK:-postgres}
