@@ -17,10 +17,10 @@ services:
     command: logstash -f /etc/logstash/conf.d/logback.conf
     ports:
       - "9600:9600"
-    depends_on:
-      - elastic-1
-      - elastic-2
-      - elastic-3
+#    depends_on:
+#      - elastic-1
+#      - elastic-2
+#      - elastic-3
     volumes:
       - ./config/logback.conf:/etc/logstash/conf.d/logback.conf
       - ./volumes/elastic-cluster/docker-logs/logstash:/logs
