@@ -11,10 +11,13 @@ services:
     deploy:
       resources:
         limits:
-          memory: 256M
-          cpus: '0.5'
+          memory: 512M
+          cpus: '1'
     environment:
       ELASTICSEARCH_HOSTS: http://elastic-1:9200
+      XPACK_MONITORING_ELASTICSEARCH_HOSTS: http://elastic-1:9200
+      LS_JAVA_OPTS: "-Xms256m -Xmx512m"
+      CLUSTER_NAME: es-twitter-cluster
     networks:
       - ${GLOBAL_NETWORK:-elastic}
   logstash:
