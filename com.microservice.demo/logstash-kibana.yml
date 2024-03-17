@@ -12,7 +12,7 @@ services:
       resources:
         limits:
           memory: 256M
-
+          cpus: '0.5'
     environment:
       ELASTICSEARCH_HOSTS: http://elastic-1:9200
     networks:
