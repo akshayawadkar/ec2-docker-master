@@ -8,6 +8,11 @@ services:
 #      - elastic-1
 #      - elastic-2
 #      - elastic-3
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+
     environment:
       ELASTICSEARCH_HOSTS: http://elastic-1:9200
     networks:
