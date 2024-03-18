@@ -10,7 +10,7 @@ services:
       - "KEYCLOAK_ADMIN=awlabs"
       - "KEYCLOAK_ADMIN_PASSWORD=awlabspw"
       - "KC_DB=postgres"
-      - "KC_DB_URL=jdbc:postgresql://postgres/keycloak"
+      - "KC_DB_URL=jdbc:postgresql://postgres-keycloak/keycloak"
       - "KC_DB_URL_PORT=5433"
       - "KC_DB_USERNAME=keycloak"
       - "KC_DB_PASSWORD=keycloak"
@@ -24,6 +24,7 @@ services:
   postgres-keycloak:
     image: postgres:15.1
     restart: always
+    hostname: postgres-keycloak
     environment:
       - "POSTGRES_USER=keycloak"
       - "POSTGRES_PASSWORD=keycloak"
