@@ -6,7 +6,8 @@ services:
     environment:
       - node.name=elastic-1
       - cluster.name=es-twitter-cluster
-      - cluster.initial_master_nodes=elastic-1
+      - discovery.seed_hosts=elastic-2,elastic-3
+      - cluster.initial_master_nodes=elastic-1,elastic-2,elastic-3
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ulimits:
@@ -19,6 +20,40 @@ services:
       - 9200:9200
     networks:
       - ${GLOBAL_NETWORK:-elastic}
+  elastic-2:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    environment:
+      - node.name=elastic-2
+      - cluster.name=es-twitter-cluster
+      - discovery.seed_hosts=elastic-1,elastic-3
+      - cluster.initial_master_nodes=elastic-1,elastic-2,elastic-3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./volumes/elastic-cluster/data02_7_17_4:/usr/share/elasticsearch/data
+    networks:
+      - ${GLOBAL_NETWORK:-elastic}
+  elastic-3:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    environment:
+      - node.name=elastic-3
+      - cluster.name=es-twitter-cluster
+      - discovery.seed_hosts=elastic-1,elastic-2
+      - cluster.initial_master_nodes=elastic-1,elastic-2,elastic-3
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - ./volumes/elastic-cluster/data03_7_17_4:/usr/share/elasticsearch/data
+    networks:
+      - ${GLOBAL_NETWORK:-elastic}
   logstash:
     image: docker.elastic.co/logstash/logstash:${ELASTIC_VERSION}
     command: logstash -f /etc/logstash/conf.d/logback.conf
@@ -26,6 +61,8 @@ services:
       - "9600:9600"
     depends_on:
       - elastic-1
+      - elastic-2
+      - elastic-3
     volumes:
       - ./config/logback.conf:/etc/logstash/conf.d/logback.conf
       - ./volumes/elastic-cluster/docker-logs/logstash:/logs
@@ -39,4 +76,8 @@ services:
 
 volumes:
   data01_7_17_4:
+    driver: local
+  data02_7_17_4:
+    driver: local
+  data03_7_17_4:
     driver: local
