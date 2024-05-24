@@ -1,0 +1,21 @@
+version: '3.7'
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.1
+    ports:
+      - 9091:8080
+    hostname: keycloak
+    restart: always
+    environment:
+      - "KEYCLOAK_ADMIN=admin"
+      - "KEYCLOAK_ADMIN_PASSWORD=admin"
+      - "KC_DB=oracle"
+      - "KC_DB_URL=jdbc:oracle:thin:@localhost:1521:orcl"
+      - "KC_DB_URL_PORT=1521"
+      - "KC_DB_USERNAME=keycloak"
+      - "KC_DB_PASSWORD=keycloak"
+      - "PROXY_ADDRESS_FORWARDING=true"
+      - "KC_HTTP_ENABLED=true"
+    command: "start-dev "
+    depends_on:
+      - postgres
