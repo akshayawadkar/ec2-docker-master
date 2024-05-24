@@ -6,10 +6,10 @@ services:
       - 9091:8080
     hostname: keycloak
     environment:
-      - "KEYCLOAK_ADMIN=admin"
-      - "KEYCLOAK_ADMIN_PASSWORD=admin"
+      - "KEYCLOAK_ADMIN=book-hive-test"
+      - "KEYCLOAK_ADMIN_PASSWORD=book-hive-test"
       - "KC_DB=oracle"
-      - "KC_DB_URL=jdbc:oracle:thin:@localhost:1521:orcl"
+      - "KC_DB_URL=jdbc:oracle:thin:@oracle:1521:orcl"
       - "KC_DB_URL_PORT=1521"
       - "KC_DB_USERNAME=keycloak"
       - "KC_DB_PASSWORD=keycloak"
